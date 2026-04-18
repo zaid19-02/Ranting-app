@@ -5,57 +5,71 @@ namespace App\Http\Controllers;
 use App\Models\Anggota;
 use App\Models\KasBulanan;
 use App\Models\Pengeluaran;
-use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // 1. Mapping bulan Inggris ke Indonesia agar match dengan Database
-        $bulanListIndo = [
-            'January' => 'Januari', 'February' => 'Februari', 'March' => 'Maret',
-            'April' => 'April', 'May' => 'Mei', 'June' => 'Juni',
-            'July' => 'Juli', 'August' => 'Agustus', 'September' => 'September',
-            'October' => 'Oktober', 'November' => 'November', 'December' => 'Desember',
-        ];
+        // Mapping bulan Inggris → Indonesia
+        $bulan = [
+            'January' => 'Januari',
+            'February' => 'Februari',
+            'March' => 'Maret',
+            'April' => 'April',
+            'May' => 'Mei',
+            'June' => 'Juni',
+            'July' => 'Juli',
+            'August' => 'Agustus',
+            'September' => 'September',
+            'October' => 'Oktober',
+            'November' => 'November',
+            'December' => 'Desember',
+        ][date('F')];
 
-        $bulanSekarangIndo = $bulanListIndo[date('F')];
-        $tahunSekarang = date('Y');
+        $tahun = date('Y');
 
-        // 2. Mengambil data statistik
+        // ======================
+        // TOTAL ANGGOTA
+        // ======================
         $totalAnggota = Anggota::count();
 
-        // Menghitung total kas bulan ini (berdasarkan kolom 'total')
-        $totalKasBulanIni = KasBulanan::where('bulan', $bulanSekarangIndo)
-            ->where('tahun', $tahunSekarang)
+        // ======================
+        // TOTAL KAS BULAN INI
+        // ======================
+        $totalKasBulanIni = KasBulanan::where('bulan', $bulan)
+            ->where('tahun', $tahun)
             ->sum('total');
 
-        // Menghitung pengeluaran bulan ini (berdasarkan kolom 'jumlah')
+        // ======================
+        // TOTAL PENGELUARAN
+        // ======================
         $totalPengeluaranBulanIni = Pengeluaran::whereMonth('tanggal', date('m'))
-            ->whereYear('tanggal', $tahunSekarang)
+            ->whereYear('tanggal', $tahun)
             ->sum('jumlah');
 
-        // 3. Menyiapkan data untuk Grafik (12 Bulan)
+        // ======================
+        // GRAFIK KAS 12 BULAN
+        // ======================
         $kasPerBulan = [];
-        $daftarSemuaBulan = [
+
+        $bulanList = [
             'Januari','Februari','Maret','April','Mei','Juni',
             'Juli','Agustus','September','Oktober','November','Desember'
         ];
 
-        foreach ($daftarSemuaBulan as $namaBulan) {
-            $kasPerBulan[] = KasBulanan::where('bulan', $namaBulan)
-                ->where('tahun', $tahunSekarang)
+        foreach ($bulanList as $b) {
+            $kasPerBulan[] = KasBulanan::where('bulan', $b)
+                ->where('tahun', $tahun)
                 ->sum('total');
         }
 
-        // 4. Mengirim data ke view dashboard.blade.php
-        return view('dashboard', [
-            'totalAnggota' => $totalAnggota,
-            'totalKasBulanIni' => $totalKasBulanIni,
-            'totalPengeluaranBulanIni' => $totalPengeluaranBulanIni,
-            'kasPerBulan' => $kasPerBulan,
-            'bulan' => $bulanSekarangIndo,
-            'tahun' => $tahunSekarang
-        ]);
+        return view('dashboard', compact(
+            'totalAnggota',
+            'totalKasBulanIni',
+            'totalPengeluaranBulanIni',
+            'kasPerBulan',
+            'bulan',
+            'tahun'
+        ));
     }
 }
