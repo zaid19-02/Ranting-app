@@ -2,13 +2,20 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class KegiatanTahunan extends Model
 {
+    use HasFactory;
+
     protected $table = 'kegiatan_tahunan';
+
     protected $fillable = [
-        'tahun', 'januari', 'februari', 'maret', 'april', 'mei', 'juni',
-        'juli', 'agustus', 'september', 'oktober', 'november', 'desember'
+        'nama_kegiatan',
+        'tahun',
+        'tanggal_kegiatan',
+        'lokasi',
+        'deskripsi',
     ];
 }
