@@ -205,7 +205,7 @@
                     <h1 class="display-5 fw-bold text-white">Data Pengeluaran</h1>
                     <p class="mb-0 opacity-75">Manajemen transparansi biaya operasional organisasi</p>
                 </div>
-                @if (session('role') == 'admin')
+                @if (Auth::user()->role == 'admin')
                     <div>
                         <a href="{{ route('pengeluarans.create') }}" class="btn-luxury-add">
                             <i class="fas fa-plus-circle me-2"></i>
@@ -226,7 +226,7 @@
                                 <th>TANGGAL</th>
                                 <th>KETERANGAN PENGELUARAN</th>
                                 <th>JUMLAH (Rp)</th>
-                                @if (session('role') == 'admin')
+                                @if (Auth::user()->role == 'admin')
                                     <th class="text-center">AKSI</th>
                                 @endif
                             </tr>
@@ -242,7 +242,7 @@
                                     <td class="jumlah-rupiah">
                                         Rp {{ number_format($pengeluaran->jumlah, 0, ',', '.') }}
                                     </td>
-                                    @if (session('role') == 'admin')
+                                    @if (Auth::user()->role == 'admin')
                                         <td class="text-center">
                                             <div class="d-flex gap-2 justify-content-center">
                                                 <a href="{{ route('pengeluarans.edit', $pengeluaran) }}"

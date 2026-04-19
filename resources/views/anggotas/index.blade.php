@@ -50,12 +50,11 @@
             {{-- ACTION --}}
             <div class="col-md-8 d-flex justify-content-md-end align-items-center gap-2 flex-wrap">
 
-                @if (session('role') == 'admin')
-                    <a href="{{ route('anggotas.create') }}" class="btn px-4 rounded-3 shadow-sm text-white"
-                        style="background-color: #137a4a; border: none;">
-                        <i class="bi bi-plus-circle me-1"></i> Tambah Anggota
-                    </a>
-                @endif
+                @if (Auth::user()->role == 'admin')
+<a href="{{ route('anggotas.create') }}" class="btn btn-success">
+    Tambah Anggota
+</a>
+@endif
 
                 <button onclick="window.print()" class="btn btn-outline-secondary px-4 rounded-3">
                     <i class="bi bi-printer me-1"></i> Print
@@ -106,7 +105,7 @@
                             <th class="text-center">Status</th>
                             <th>Kontak</th>
 
-                            @if (session('role') == 'admin')
+                            @if (Auth::user()->role == 'admin')
                                 <th class="text-center">Aksi</th>
                             @endif
 
@@ -198,27 +197,17 @@
                                     {{ $anggota->no_telpon }}
                                 </td>
 
-                                @if (session('role') == 'admin')
-                                    <td class="text-center">
+                                @if (Auth::user()->role == 'admin')
+<td>
+    <a href="{{ route('anggotas.edit', $anggota) }}">Edit</a>
 
-                                        <a href="{{ route('anggotas.edit', $anggota) }}"
-                                            class="btn btn-sm btn-outline-warning rounded-3">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-
-                                        <form action="{{ route('anggotas.destroy', $anggota) }}" method="POST"
-                                            class="d-inline">
-                                            @csrf @method('DELETE')
-
-                                            <button class="btn btn-sm btn-outline-danger rounded-3"
-                                                onclick="return confirm('Hapus data ini?')">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-
-                                        </form>
-
-                                    </td>
-                                @endif
+    <form action="{{ route('anggotas.destroy', $anggota) }}" method="POST">
+        @csrf
+        @method('DELETE')
+        <button>Hapus</button>
+    </form>
+</td>
+@endif
 
                             </tr>
                         @empty

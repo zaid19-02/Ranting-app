@@ -3,45 +3,56 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+    // FORM LOGIN
     public function showLoginForm()
     {
         return view('login');
     }
 
+    // PROSES LOGIN
     public function login(Request $request)
     {
-        if ($request->role == 'admin') {
-            return redirect()->route('login.admin.form');
-        } else {
-            session(['role' => 'user', 'login' => true]);
-            return redirect('/dashboard');
+        // VALIDASI
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        // DATA LOGIN
+        $credentials = $request->only('email', 'password');
+
+        // CEK LOGIN
+        if (Auth::attempt($credentials)) {
+
+            $request->session()->regenerate();
+
+            $user = Auth::user();
+
+            // 🔥 REDIRECT BERDASARKAN ROLE
+            if ($user->role === 'admin') {
+                return redirect()->route('dashboard')
+                    ->with('success', 'Selamat datang Admin!');
+            }
+
+            return redirect()->route('dashboard')
+                ->with('success', 'Login berhasil!');
         }
+
+        return back()->with('error', 'Email atau password salah');
     }
 
-    public function showAdminLoginForm()
+    // LOGOUT
+    public function logout(Request $request)
     {
-        return view('admin_login');
-    }
+        Auth::logout();
 
-    public function adminLogin(Request $request)
-    {
-        $username = $request->username;
-        $password = $request->password;
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
-        if ($username == 'admin' && $password == 'admin123') {
-            session(['role' => 'admin', 'login' => true, 'user_name' => 'Administrator']);
-            return redirect('/dashboard')->with('success', 'Selamat datang, Administrator!');
-        }
-
-        return back()->with('error', 'Username atau password salah!');
-    }
-
-    public function logout()
-    {
-        session()->flush();
         return redirect('/');
     }
 }

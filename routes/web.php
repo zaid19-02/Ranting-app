@@ -1,71 +1,65 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\KasBulananController;
 use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\KegiatanTahunanController;
-use Illuminate\Http\Request;
-use App\Http\Controllers\DashboardController;
 
-// --- GUEST ROUTES (LOGIN/LOGOUT) ---
-Route::get('/', function () {
-    return view('login');
-})->name('login.form');
+/*
+|--------------------------------------------------------------------------
+| AUTH ROUTES (LOGIN / LOGOUT)
+|--------------------------------------------------------------------------
+*/
 
-Route::post('/login', function (Request $request) {
-    if ($request->role == 'admin') {
-        return redirect()->route('login.admin.form');
-    } else {
-        session(['role' => 'user', 'login' => true]);
-        return redirect('/dashboard');
-    }
-})->name('login');
+// FORM LOGIN
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 
-Route::get('/login/admin', function () {
-    return view('admin_login');
-})->name('login.admin.form');
+// "/" arahkan ke login
+Route::get('/', [AuthController::class, 'showLoginForm']);
 
-Route::post('/login/admin', function (Request $request) {
-    if ($request->username == 'admin' && $request->password == 'admin123') {
-        session([
-            'role' => 'admin',
-            'login' => true,
-            'user_name' => 'Administrator'
-        ]);
-        return redirect('/dashboard')->with('success', 'Selamat datang, Administrator!');
-    }
+// PROSES LOGIN
+Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 
-    return back()->with('error', 'Username atau password salah!');
-})->name('login.admin.submit');
-
-Route::get('/logout', function () {
-    session()->flush();
-    return redirect('/');
-})->name('logout');
+// LOGOUT
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
-// --- AUTH ROUTES (HARUS LOGIN) ---
-Route::middleware(['auth.session'])->group(function () {
+/*
+|--------------------------------------------------------------------------
+| USER LOGIN (SEMUA ROLE)
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth'])->group(function () {
 
-    // ✅ Dashboard HARUS pakai controller
+    // DASHBOARD (admin & user)
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/home', function () {
-        return redirect()->route('dashboard');
-    })->name('home');
+    Route::redirect('/home', '/dashboard');
+});
 
-    // 1. Data Anggota
+
+/*
+|--------------------------------------------------------------------------
+| ADMIN ONLY 🔒
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'admin'])->group(function () {
+
+    // DATA ANGGOTA
     Route::get('/anggotas/search', [AnggotaController::class, 'search'])->name('anggotas.search');
     Route::resource('anggotas', AnggotaController::class);
 
-    // 2. Kas Bulanan
-    Route::post('/kas_bulanans/store-massal', [KasBulananController::class, 'storeMassal'])->name('kas_bulanans.store_massal');
+    // KAS BULANAN
+    Route::post('/kas_bulanans/store-massal', [KasBulananController::class, 'storeMassal'])
+        ->name('kas_bulanans.store_massal');
     Route::resource('kas_bulanans', KasBulananController::class);
 
-    // 3. Pengeluaran
+    // PENGELUARAN
     Route::resource('pengeluarans', PengeluaranController::class);
 
-    // 4. Kegiatan Tahunan
+    // KEGIATAN
     Route::resource('kegiatan_tahunan', KegiatanTahunanController::class);
 });
