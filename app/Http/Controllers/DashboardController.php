@@ -28,13 +28,14 @@ class DashboardController extends Controller
 
         $bulan = $bulanMap[date('F')];
         $tahun = date('Y');
-
-        // 🔥 FIX: ambil user terbaru
         $user = Auth::user()->fresh();
 
-        // ======================
-        // DATA KAS (SEMUA ROLE)
-        // ======================
+        // 1. HITUNG KAS KESELURUHAN (SALDO AKHIR) 🔥 TAMBAHKAN INI
+        $semuaPemasukan = KasBulanan::sum('total');
+        $semuaPengeluaran = Pengeluaran::sum('jumlah');
+        $totalKasKeseluruhan = $semuaPemasukan - $semuaPengeluaran;
+
+        // 2. DATA KAS BULAN INI & CHART
         $totalKasBulanIni = KasBulanan::where('bulan', $bulan)
             ->where('tahun', $tahun)
             ->sum('total');
@@ -44,23 +45,8 @@ class DashboardController extends Controller
             ->groupBy('bulan')
             ->pluck('total', 'bulan');
 
-        $bulanList = [
-            'Januari',
-            'Februari',
-            'Maret',
-            'April',
-            'Mei',
-            'Juni',
-            'Juli',
-            'Agustus',
-            'September',
-            'Oktober',
-            'November',
-            'Desember'
-        ];
-
+        $bulanList = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
         $kasPerBulan = [];
-
         foreach ($bulanList as $b) {
             $kasPerBulan[] = $kasData[$b] ?? 0;
         }
@@ -69,14 +55,13 @@ class DashboardController extends Controller
         // ADMIN
         // ======================
         if ($user->role == 'admin') {
-
             $totalAnggota = Anggota::count();
-
             $totalPengeluaranBulanIni = Pengeluaran::whereMonth('tanggal', date('m'))
                 ->whereYear('tanggal', $tahun)
                 ->sum('jumlah');
 
             return view('dashboard', compact(
+                'totalKasKeseluruhan', // 🔥 KIRIM KE VIEW
                 'totalAnggota',
                 'totalKasBulanIni',
                 'totalPengeluaranBulanIni',
@@ -90,6 +75,7 @@ class DashboardController extends Controller
         // USER
         // ======================
         return view('dashboard_user', compact(
+            'totalKasKeseluruhan', // 🔥 KIRIM KE VIEW JUGA UNTUK USER
             'totalKasBulanIni',
             'kasPerBulan',
             'bulan',

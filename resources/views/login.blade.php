@@ -108,7 +108,7 @@
             <div class="mb-4">
                 <i class="fas fa-wallet fa-4x text-white"></i>
             </div>
-            <h1 class="display-4 fw-800">E-Kas <br><span style="opacity: 0.7 text-decoration: underline wavy #10b981;">Pro Edition.</span></h1>
+            <h1 class="display-4 fw-800">E-Kas <br><span style="opacity: 0.7 text-decoration: underline wavy #10b981;">Mahesa Kurung.</span></h1>
             <p class="fs-5 mt-3 opacity-75">
                 Solusi cerdas manajemen keuangan kas dengan transparansi tingkat tinggi.
             </p>
