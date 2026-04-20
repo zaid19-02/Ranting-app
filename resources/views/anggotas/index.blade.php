@@ -51,10 +51,8 @@
             <div class="col-md-8 d-flex justify-content-md-end align-items-center gap-2 flex-wrap">
 
                 @if (Auth::user()->role == 'admin')
-<a href="{{ route('anggotas.create') }}" class="btn btn-success">
-    Tambah Anggota
-</a>
-@endif
+                <a href="{{ route('anggotas.create') }}" class="btn btn-success">Tambah Anggota</a>
+                @endif
 
                 <button onclick="window.print()" class="btn btn-outline-secondary px-4 rounded-3">
                     <i class="bi bi-printer me-1"></i> Print
