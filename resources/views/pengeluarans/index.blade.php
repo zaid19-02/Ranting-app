@@ -1,277 +1,275 @@
 @extends('layouts.app')
 
 @section('content')
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        /* Custom Luxury Green Theme - Pengeluaran */
         :root {
-            --dark-green-deep: #064e3b;
-            /* Hijau Tua Utama */
-            --emerald-glow: #10b981;
-            /* Hijau Emerald Terang untuk Aksen */
-            --soft-emerald: #ecfdf5;
-            /* Latar belakang kartu lembut */
-            --luxury-bg: #f8fafc;
-            /* Latar belakang halaman utama */
+            --dark-green: #022c22;
+            --deep-green: #064e3b;
+            --emerald: #10b981;
+            --soft-bg: #f1f5f9;
         }
 
         body {
-            background-color: var(--luxury-bg);
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(180deg, #f8fafc, #ecfdf5);
         }
 
-        /* Container Utama Megah */
-        .page-wrapper {
-            padding: 1.5rem 0;
-        }
-
-        /* Header Section - Gradasi Hijau Tua */
-        .hero-header {
-            background: linear-gradient(135deg, var(--dark-green-deep) 0%, #065f46 100%);
-            color: white;
+        /* HEADER PREMIUM */
+        .hero {
+            background: linear-gradient(135deg, #022c22, #064e3b);
+            border-radius: 24px;
             padding: 2.5rem;
-            border-radius: 20px;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 25px rgba(6, 78, 59, 0.2);
+            color: white;
+            box-shadow: 0 15px 40px rgba(2, 44, 34, 0.3);
             position: relative;
             overflow: hidden;
         }
 
-        /* Hiasan Latar Belakang Header */
-        .hero-header::after {
+        .hero::after {
             content: '';
             position: absolute;
-            bottom: -50px;
-            right: -50px;
-            width: 150px;
-            height: 150px;
+            right: -60px;
+            bottom: -60px;
+            width: 200px;
+            height: 200px;
             background: rgba(255, 255, 255, 0.05);
             border-radius: 50%;
         }
 
-        .hero-header h1 {
-            font-weight: 800;
-            margin-bottom: 0.5rem;
+        .btn-add {
+            background: white;
+            color: var(--dark-green);
+            border-radius: 12px;
+            font-weight: 700;
+            padding: 10px 18px;
+            transition: .3s;
         }
 
-        /* Tombol Tambah Mewah */
-        .btn-luxury-add {
+        .btn-add:hover {
+            background: var(--emerald);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* SUMMARY CARD */
+        .summary-card {
             background: white;
-            color: var(--dark-green-deep);
-            border: none;
-            border-radius: 12px;
-            padding: 0.75rem 1.5rem;
-            font-weight: 700;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
+            border-radius: 18px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
             align-items: center;
         }
 
-        .btn-luxury-add:hover {
-            background: var(--emerald-glow);
-            color: white !important;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(6, 78, 59, 0.25);
+        .summary-card h3 {
+            margin: 0;
+            font-weight: 800;
+            color: var(--deep-green);
         }
 
-        /* Card untuk Tabel (Glassmorphism Effect) */
-        .table-container {
+        /* TABLE */
+        .table-box {
             background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
             border-radius: 20px;
-            padding: 2rem;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.5);
         }
 
-        /* Kustomisasi Tabel Modern */
-        .table-responsive {
-            border-radius: 15px;
-            overflow: hidden;
-        }
-
-        .table-modern {
-            margin-bottom: 0;
-        }
-
-        /* Header Tabel - Hijau Tua */
         .table-modern thead th {
-            background-color: var(--dark-green-deep);
+            background: var(--dark-green);
             color: white;
-            border: none;
             text-transform: uppercase;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             letter-spacing: 1px;
-            padding: 1.25rem 1rem;
-            font-weight: 700;
         }
 
-        /* Baris Tabel */
-        .table-modern tbody td {
-            vertical-align: middle;
-            padding: 1rem;
-            border-bottom: 1px solid #e2e8f0;
-            color: #475569;
-            font-size: 0.95rem;
-        }
-
-        /* Baris Putih/Abadi */
-        .table-modern tbody tr {
-            transition: all 0.2s ease;
-        }
-
-        .table-modern tbody tr:last-child td {
-            border-bottom: none;
-        }
-
-        /* Efek Hover Baris */
         .table-modern tbody tr:hover {
-            background-color: rgba(16, 185, 129, 0.03);
-            /* Sentuhan Hijau Emerald sangat tipis */
+            background: rgba(16, 185, 129, 0.05);
         }
 
-        /* Teks Rupiah - Hijau Emerald Deep */
-        .table-modern td.jumlah-rupiah {
-            font-weight: 700;
-            color: #059669;
-            /* Sedikit lebih terang dari tua */
-            font-size: 1.1rem;
+        .jumlah {
+            font-weight: 800;
+            color: var(--emerald);
         }
 
-        /* Tombol Aksi */
+        /* BUTTON */
         .btn-edit {
-            background-color: #f59e0b;
-            /* Ambar */
+            background: #f59e0b;
             color: white;
-            border: none;
             border-radius: 8px;
-            padding: 0.5rem 1rem;
-            transition: 0.3s;
-        }
-
-        .btn-edit:hover {
-            background-color: #d97706;
-            color: white !important;
         }
 
         .btn-hapus {
-            background-color: #ef4444;
-            /* Merah */
+            background: #ef4444;
             color: white;
-            border: none;
             border-radius: 8px;
-            padding: 0.5rem 1rem;
-            transition: 0.3s;
         }
 
-        .btn-hapus:hover {
-            background-color: #dc2626;
-            color: white !important;
+        /* PRINT FIX */
+        @page {
+            size: A4;
+            margin: 12mm;
         }
 
-        /* Responsif Kustom - Mobile First */
-        @media (max-width: 768px) {
-            .hero-header {
-                padding: 1.5rem;
+        @media print {
+
+            /* sembunyikan elemen UI */
+            .hero,
+            .btn,
+            .no-print,
+            nav,
+            footer {
+                display: none !important;
+            }
+
+            /* pastikan halaman bersih */
+            html,
+            body {
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: #fff !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* container full agar tidak kepotong */
+            .container,
+            .container-fluid {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            /* kartu aman print */
+            .card {
+                box-shadow: none !important;
+                border: 1px solid #ddd !important;
+                page-break-inside: avoid;
+            }
+
+            /* header print */
+            .print-header {
+                display: block !important;
                 text-align: center;
+                margin-bottom: 20px;
             }
 
-            .table-container {
-                padding: 1rem;
+            /* hindari tabel/row kepotong */
+            table,
+            tr,
+            td,
+            th {
+                page-break-inside: avoid !important;
             }
 
-            .table-modern thead th {
-                font-size: 0.7rem;
-                padding: 0.75rem 0.5rem;
+            /* gambar tidak pecah */
+            img {
+                max-width: 100% !important;
+                height: auto !important;
             }
+        }
 
-            .table-modern tbody td {
-                font-size: 0.85rem;
-                padding: 0.75rem 0.5rem;
-            }
+        /* default hidden */
+        .print-header {
+            display: none;
         }
     </style>
 
-    <div class="page-wrapper">
-        <div class="container">
+    <div class="container py-4">
 
-            {{-- HEADER SECTION (MEGAH) --}}
-            <div class="hero-header d-flex flex-column flex-md-row justify-content-between align-items-center">
-                <div class="mb-3 mb-md-0">
-                    <span class="badge bg-white text-success px-3 py-2 rounded-pill fw-bold mb-2 shadow-sm d-inline-block">
-                        <i class="fas fa-file-invoice-dollar me-2"></i>REKAPITULASI
-                    </span>
-                    <h1 class="display-5 fw-bold text-white">Data Pengeluaran</h1>
-                    <p class="mb-0 opacity-75">Manajemen transparansi biaya operasional organisasi</p>
-                </div>
+        {{-- HEADER --}}
+        <div class="hero d-flex justify-content-between align-items-center flex-wrap">
+            <div>
+                <h2 class="fw-bold">Data Pengeluaran</h2>
+                <p class="mb-0 opacity-75">Transparansi biaya operasional</p>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button onclick="window.print()" class="btn btn-outline-light">
+                    <i class="fas fa-print"></i>
+                </button>
+
                 @if (Auth::user()->role == 'admin')
-                    <div>
-                        <a href="{{ route('pengeluarans.create') }}" class="btn-luxury-add">
-                            <i class="fas fa-plus-circle me-2"></i>
-                            Tambah Pengeluaran
-                        </a>
-                    </div>
+                    <a href="{{ route('pengeluarans.create') }}" class="btn-add">
+                        <i class="fas fa-plus me-1"></i>Tambah
+                    </a>
                 @endif
             </div>
+        </div>
 
-            {{-- TABEL SECTION (MEWAH & MODERN) --}}
-            <div class="table-container">
-                <div class="table-responsive">
-                    {{-- Gunakan Class table-modern kita --}}
-                    <table class="table table-modern datatable align-middle w-100">
-                        <thead>
+        {{-- PRINT HEADER --}}
+        <div class="print-header">
+            <h2>MAHESA KURUNG AL-MUKAROMAH</h2>
+            <p>RANTING PENGASINAN</p>
+            <hr>
+            <h4>LAPORAN PENGELUARAN</h4>
+            <p>Tanggal Cetak: {{ now()->format('d/m/Y') }}</p>
+        </div>
+
+        {{-- SUMMARY --}}
+        <div class="summary-card mt-4">
+            <div>
+                <small class="text-muted">TOTAL PENGELUARAN</small>
+                <h3>
+                    Rp {{ number_format($pengeluarans->sum('jumlah'), 0, ',', '.') }}
+                </h3>
+            </div>
+            <i class="fas fa-wallet fa-2x text-success opacity-50"></i>
+        </div>
+
+        {{-- TABLE --}}
+        <div class="table-box mt-4">
+            <div class="table-responsive">
+                <table class="table table-modern align-middle">
+
+                    <thead>
+                        <tr>
+                            <th>NO</th>
+                            <th>TANGGAL</th>
+                            <th>KETERANGAN</th>
+                            <th>JUMLAH</th>
+                            @if (Auth::user()->role == 'admin')
+                                <th>AKSI</th>
+                            @endif
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach ($pengeluarans as $i => $p)
                             <tr>
-                                <th class="text-center">NO</th>
-                                <th>TANGGAL</th>
-                                <th>KETERANGAN PENGELUARAN</th>
-                                <th>JUMLAH (Rp)</th>
+                                <td>{{ $i + 1 }}</td>
+                                <td>{{ \Carbon\Carbon::parse($p->tanggal)->format('d/m/Y') }}</td>
+                                <td>{{ $p->keterangan_pengeluaran }}</td>
+                                <td class="jumlah">
+                                    Rp {{ number_format($p->jumlah, 0, ',', '.') }}
+                                </td>
+
                                 @if (Auth::user()->role == 'admin')
-                                    <th class="text-center">AKSI</th>
+                                    <td>
+                                        <a href="{{ route('pengeluarans.edit', $p) }}" class="btn btn-edit btn-sm">
+                                            Edit
+                                        </a>
+                                        <form action="{{ route('pengeluarans.destroy', $p) }}" method="POST"
+                                            class="d-inline">
+                                            @csrf @method('DELETE')
+                                            <button class="btn btn-hapus btn-sm">Hapus</button>
+                                        </form>
+                                    </td>
                                 @endif
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($pengeluarans as $index => $pengeluaran)
-                                <tr>
-                                    <td class="text-center text-muted">{{ $index + 1 }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($pengeluaran->tanggal)->format('d/m/Y') }}</td>
-                                    <td>
-                                        {{ $pengeluaran->keterangan_pengeluaran }}
-                                    </td>
-                                    <td class="jumlah-rupiah">
-                                        Rp {{ number_format($pengeluaran->jumlah, 0, ',', '.') }}
-                                    </td>
-                                    @if (Auth::user()->role == 'admin')
-                                        <td class="text-center">
-                                            <div class="d-flex gap-2 justify-content-center">
-                                                <a href="{{ route('pengeluarans.edit', $pengeluaran) }}"
-                                                    class="btn btn-edit btn-sm shadow-sm">
-                                                    <i class="fas fa-edit me-1"></i> Edit
-                                                </a>
-                                                <form action="{{ route('pengeluarans.destroy', $pengeluaran) }}"
-                                                    method="POST" class="d-inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-hapus btn-sm shadow-sm"
-                                                        onclick="return confirm('Yakin hapus pengeluaran ini?')">
-                                                        <i class="fas fa-trash-alt me-1"></i> Hapus
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    @endif
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                        @endforeach
+                    </tbody>
+
+                </table>
             </div>
-
         </div>
-    </div>
 
-    {{-- Load FontAwesome jika belum ada --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    {{-- Script DataTable jika diperlukan (opsional, karena class 'datatable' ada) --}}
+    </div>
 @endsection
