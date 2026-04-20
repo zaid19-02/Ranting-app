@@ -6,11 +6,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'Aplikasi Kas' }} - Mahesa Kurung</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap"
+        rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
     <style>
+        /* ================= PRINT GLOBAL FIX ================= */
+        @media print {
+
+            /* Hilangkan sidebar */
+            .sidebar {
+                display: none !important;
+            }
+
+            /* Hilangkan topbar */
+            .top-bar {
+                display: none !important;
+            }
+
+            /* Hilangkan navbar user */
+            .navbar-user {
+                display: none !important;
+            }
+
+            /* Hilangkan tombol dll */
+            .btn,
+            .btn-logout,
+            .no-print {
+                display: none !important;
+            }
+
+            /* Full lebar konten */
+            .main {
+                margin-left: 0 !important;
+                padding: 0 !important;
+            }
+
+            /* Biar full kertas */
+            body {
+                background: #fff !important;
+            }
+
+            /* Hilangkan shadow biar clean */
+            .card,
+            .card-custom,
+            .table-box {
+                box-shadow: none !important;
+                border: none !important;
+            }
+
+            /* Table biar rapi */
+            table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+            }
+
+            th,
+            td {
+                border: 1px solid #000 !important;
+                padding: 6px !important;
+                font-size: 11px;
+            }
+
+            /* Landscape biar muat banyak */
+            @page {
+                size: landscape;
+                margin: 10mm;
+            }
+        }
+
+        /* tampilan asli*/
         :root {
             --primary-emerald: #022c22;
             --light-emerald: #064e3b;
@@ -70,7 +137,8 @@
             margin-right: 15px;
         }
 
-        .sidebar a:hover, .sidebar a.active {
+        .sidebar a:hover,
+        .sidebar a.active {
             background: rgba(255, 255, 255, 0.1);
             color: white;
             transform: translateX(8px);
@@ -113,7 +181,7 @@
             background: var(--primary-emerald) !important;
             padding: 1rem 2rem;
             border-radius: 0 0 20px 20px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
         .btn-logout {
@@ -141,109 +209,134 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            .sidebar { width: 80px; padding: 1rem 0.5rem; }
-            .sidebar-brand, .sidebar a span, .logout-wrapper span { display: none; }
-            .main { margin-left: 80px; padding: 1.5rem; }
-            .sidebar a i { margin-right: 0; font-size: 1.5rem; width: 100%; text-align: center; }
+            .sidebar {
+                width: 80px;
+                padding: 1rem 0.5rem;
+            }
+
+            .sidebar-brand,
+            .sidebar a span,
+            .logout-wrapper span {
+                display: none;
+            }
+
+            .main {
+                margin-left: 80px;
+                padding: 1.5rem;
+            }
+
+            .sidebar a i {
+                margin-right: 0;
+                font-size: 1.5rem;
+                width: 100%;
+                text-align: center;
+            }
         }
     </style>
 </head>
 
 <body>
 
-@guest
-    <script>window.location.href = "/";</script>
-@endguest
+    @guest
+        <script>
+            window.location.href = "/";
+        </script>
+    @endguest
 
-@auth
-    @if (Auth::user()->isAdmin())
-        {{-- ================= ADMIN SIDEBAR ================= --}}
-        <div class="sidebar">
-            <div class="sidebar-brand">
-                Mahesa Kurung
-            </div>
-
-            <div class="nav-menu">
-                <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                    <i class="bi bi-grid-1x2-fill"></i> <span>Dashboard</span>
-                </a>
-                <a href="{{ route('anggotas.index') }}" class="{{ request()->routeIs('anggotas.*') ? 'active' : '' }}">
-                    <i class="bi bi-people-fill"></i> <span>Data Anggota</span>
-                </a>
-                <a href="{{ route('kas_bulanans.index') }}" class="{{ request()->routeIs('kas_bulanans.*') ? 'active' : '' }}">
-                    <i class="bi bi-wallet2"></i> <span>Manajemen Kas</span>
-                </a>
-                <a href="{{ route('pengeluarans.index') }}" class="{{ request()->routeIs('pengeluarans.*') ? 'active' : '' }}">
-                    <i class="bi bi-arrow-up-right-circle-fill"></i> <span>Pengeluaran</span>
-                </a>
-                <a href="{{ route('kegiatan_tahunan.index') }}" class="{{ request()->routeIs('kegiatan_tahunan.*') ? 'active' : '' }}">
-                    <i class="bi bi-calendar-event-fill"></i> <span>Kegiatan</span>
-                </a>
-            </div>
-
-            <div class="logout-wrapper">
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn btn-logout w-100 d-flex align-items-center justify-content-center gap-2">
-                        <i class="bi bi-box-arrow-left"></i> <span>Logout</span>
-                    </button>
-                </form>
-            </div>
-        </div>
-
-        {{-- ================= ADMIN MAIN CONTENT ================= --}}
-        <div class="main">
-            <div class="top-bar">
-                <div class="page-title">
-                    <h4>{{ $title ?? 'Dashboard' }}</h4>
+    @auth
+        @if (Auth::user()->isAdmin())
+            {{-- ================= ADMIN SIDEBAR ================= --}}
+            <div class="sidebar">
+                <div class="sidebar-brand">
+                    Mahesa Kurung
                 </div>
-                <div class="user-profile d-flex align-items-center gap-3">
-                    <div class="text-end d-none d-md-block">
-                        <p class="m-0 fw-bold small">{{ Auth::user()->name }}</p>
-                        <p class="m-0 text-muted small" style="font-size: 11px;">Administrator</p>
-                    </div>
-                    <div class="avatar bg-success text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                        <i class="bi bi-person-fill"></i>
-                    </div>
+
+                <div class="nav-menu">
+                    <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                        <i class="bi bi-grid-1x2-fill"></i> <span>Dashboard</span>
+                    </a>
+                    <a href="{{ route('anggotas.index') }}" class="{{ request()->routeIs('anggotas.*') ? 'active' : '' }}">
+                        <i class="bi bi-people-fill"></i> <span>Data Anggota</span>
+                    </a>
+                    <a href="{{ route('kas_bulanans.index') }}"
+                        class="{{ request()->routeIs('kas_bulanans.*') ? 'active' : '' }}">
+                        <i class="bi bi-wallet2"></i> <span>Manajemen Kas</span>
+                    </a>
+                    <a href="{{ route('pengeluarans.index') }}"
+                        class="{{ request()->routeIs('pengeluarans.*') ? 'active' : '' }}">
+                        <i class="bi bi-arrow-up-right-circle-fill"></i> <span>Pengeluaran</span>
+                    </a>
+                    <a href="{{ route('kegiatan_tahunan.index') }}"
+                        class="{{ request()->routeIs('kegiatan_tahunan.*') ? 'active' : '' }}">
+                        <i class="bi bi-calendar-event-fill"></i> <span>Kegiatan</span>
+                    </a>
                 </div>
-            </div>
 
-            <div class="content-body">
-                @yield('content')
-            </div>
-        </div>
-
-    @else
-        {{-- ================= USER INTERFACE ================= --}}
-        <nav class="navbar navbar-dark navbar-user px-4 mb-4">
-            <div class="container-fluid">
-                <span class="navbar-brand fw-bold font-montserrat">
-                    <i class="bi bi-shield-check text-warning me-2"></i> MK-KAS MEMBER
-                </span>
-
-                <div class="d-flex align-items-center gap-4">
-                    <span class="text-white-50 d-none d-md-block small">Halo, <b>{{ Auth::user()->name }}</b></span>
-                    <form action="{{ route('logout') }}" method="POST" class="m-0">
+                <div class="logout-wrapper">
+                    <form action="{{ route('logout') }}" method="POST">
                         @csrf
-                        <button class="btn btn-logout border-0">
-                            <i class="bi bi-box-arrow-left me-1"></i> Logout
+                        <button type="submit"
+                            class="btn btn-logout w-100 d-flex align-items-center justify-content-center gap-2">
+                            <i class="bi bi-box-arrow-left"></i> <span>Logout</span>
                         </button>
                     </form>
                 </div>
             </div>
-        </nav>
 
-        <div class="container pb-5">
-            <div class="row">
-                <div class="col-12">
-                    {{-- Area Konten User --}}
+            {{-- ================= ADMIN MAIN CONTENT ================= --}}
+            <div class="main">
+                <div class="top-bar">
+                    <div class="page-title">
+                        <h4>{{ $title ?? 'Dashboard' }}</h4>
+                    </div>
+                    <div class="user-profile d-flex align-items-center gap-3">
+                        <div class="text-end d-none d-md-block">
+                            <p class="m-0 fw-bold small">{{ Auth::user()->name }}</p>
+                            <p class="m-0 text-muted small" style="font-size: 11px;">Administrator</p>
+                        </div>
+                        <div class="avatar bg-success text-white rounded-circle d-flex align-items-center justify-content-center"
+                            style="width: 40px; height: 40px;">
+                            <i class="bi bi-person-fill"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-body">
                     @yield('content')
                 </div>
             </div>
-        </div>
-    @endif
-@endauth
+        @else
+            {{-- ================= USER INTERFACE ================= --}}
+            <nav class="navbar navbar-dark navbar-user px-4 mb-4">
+                <div class="container-fluid">
+                    <span class="navbar-brand fw-bold font-montserrat">
+                        <i class="bi bi-shield-check text-warning me-2"></i> MK-KAS MEMBER
+                    </span>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+                    <div class="d-flex align-items-center gap-4">
+                        <span class="text-white-50 d-none d-md-block small">Halo, <b>{{ Auth::user()->name }}</b></span>
+                        <form action="{{ route('logout') }}" method="POST" class="m-0">
+                            @csrf
+                            <button class="btn btn-logout border-0">
+                                <i class="bi bi-box-arrow-left me-1"></i> Logout
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="container pb-5">
+                <div class="row">
+                    <div class="col-12">
+                        {{-- Area Konten User --}}
+                        @yield('content')
+                    </div>
+                </div>
+            </div>
+        @endif
+    @endauth
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

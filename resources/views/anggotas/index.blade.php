@@ -3,265 +3,264 @@
 @section('content')
     <div class="container-fluid py-4 bg-light min-vh-100" style="font-family: 'Plus Jakarta Sans', sans-serif;">
 
+        <style>
+            :root {
+                --green-dark: #0f4332;
+                --green: #145c43;
+                --green-soft: #1f6f54;
+            }
+
+            body {
+                font-family: 'Plus Jakarta Sans', sans-serif;
+            }
+
+            /* ===== HEADER PREMIUM ===== */
+            .main-header {
+                background: linear-gradient(135deg, var(--green-dark), var(--green));
+                border-radius: 28px;
+                padding: 50px 20px;
+                color: #fff;
+                text-align: center;
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+                position: relative;
+                overflow: hidden;
+            }
+
+            .main-header::after {
+                content: "";
+                position: absolute;
+                width: 300px;
+                height: 300px;
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 50%;
+                top: -100px;
+                right: -80px;
+            }
+
+            .main-header h2 {
+                letter-spacing: 2px;
+                font-weight: 800;
+            }
+
+            /* ===== CARD ===== */
+            .card-premium {
+                border: none;
+                border-radius: 20px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+                overflow: hidden;
+                transition: 0.3s;
+            }
+
+            .card-premium:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+            }
+
+            /* ===== TABLE ===== */
+            .table thead {
+                background: var(--green-dark);
+                color: #fff;
+                font-size: 12px;
+            }
+
+            .table tbody tr:hover {
+                background: #f3f7f5;
+            }
+
+            /* ===== BUTTON ===== */
+            .btn-green {
+                background: var(--green-dark);
+                color: #fff;
+                border-radius: 12px;
+                padding: 10px 16px;
+                transition: 0.2s;
+            }
+
+            .btn-green:hover {
+                background: var(--green-soft);
+                color: #fff;
+            }
+
+            /* ===== SEARCH ===== */
+            #customSearchBox input {
+                border-radius: 12px;
+                border: 1px solid #d1d5db;
+                padding: 8px 14px;
+                min-width: 220px;
+            }
+
+            #customSearchBox input:focus {
+                border-color: var(--green);
+                box-shadow: 0 0 0 3px rgba(20, 92, 67, 0.15);
+            }
+
+            /* ===== PRINT ===== */
+            @media print {
+
+                @page {
+                    size: landscape;
+                    margin: 10mm;
+                }
+
+                body {
+                    background: #fff !important;
+                    font-size: 11px;
+                }
+
+                .no-print,
+                .btn,
+                #customSearchBox,
+                .dataTables_filter {
+                    display: none !important;
+                }
+
+                .card-premium,
+                .card {
+                    box-shadow: none !important;
+                    border: none !important;
+                }
+
+                .print-header {
+                    display: block !important;
+                    text-align: center;
+                    margin-bottom: 15px;
+                }
+
+                table {
+                    width: 100% !important;
+                    border-collapse: collapse !important;
+                }
+
+                th,
+                td {
+                    border: 1px solid #000 !important;
+                    padding: 6px !important;
+                }
+
+                thead th {
+                    background: #0f4332 !important;
+                    color: #fff !important;
+                }
+
+                tr {
+                    page-break-inside: avoid;
+                }
+            }
+
+            .print-header {
+                display: none;
+            }
+        </style>
+
         {{-- HEADER --}}
-        <div class="card border-0 shadow-sm mb-4 overflow-hidden" style="border-radius: 24px; background-color: #0f4332;">
+        <div class="main-header mb-4 no-print">
+            <h2>MAHESA KURUNG AL-MUKAROMAH</h2>
+            <p class="mb-0 opacity-75">RANTING PENGASINAN</p>
+        </div>
 
-            <div class="card-body text-center text-white py-5">
-
-                <h2 class="fw-bold mb-1" style="letter-spacing: 2px;">
-                    MAHESA KURUNG AL-MUKAROMAH
-                </h2>
-
-                <div class="text-white-50 small" style="letter-spacing: 4px;">
-                    RANTING PENGASINAN
-                </div>
-
-            </div>
+        {{-- PRINT HEADER --}}
+        <div class="print-header">
+            <h3>MAHESA KURUNG AL-MUKAROMAH</h3>
+            <p>RANTING PENGASINAN</p>
+            <hr>
+            <h4>LAPORAN DATA ANGGOTA</h4>
+            <p>Tanggal Cetak: {{ date('d/m/Y') }}</p>
         </div>
 
         {{-- TOP BAR --}}
-        <div class="row g-3 mb-3">
+        <div class="row g-3 mb-3 no-print">
 
-            {{-- TOTAL --}}
             <div class="col-md-4">
-                <div class="card border-0 shadow-sm rounded-4 h-100">
-                    <div class="card-body d-flex align-items-center justify-content-between py-3">
-
-                        <div class="d-flex align-items-center gap-2">
-
-                            <div class="bg-success bg-opacity-10 p-2 rounded-3">
-                                <i class="bi bi-people-fill text-success"></i>
-                            </div>
-
-                            <div class="text-muted small fw-semibold">
-                                TOTAL ANGGOTA
-                            </div>
-
-                        </div>
-
-                        <div class="fs-5 fw-bold text-dark">
-                            {{ count($anggotas) }}
-                        </div>
-
+                <div class="card-premium p-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-muted small fw-bold">TOTAL ANGGOTA</div>
+                        <h4 class="mb-0 fw-bold text-success">{{ count($anggotas) }}</h4>
                     </div>
+                    <i class="bi bi-people-fill fs-2 text-success"></i>
                 </div>
             </div>
 
-            {{-- ACTION --}}
-            <div class="col-md-8 d-flex justify-content-md-end align-items-center gap-2 flex-wrap">
+            <div class="col-md-8 d-flex justify-content-end align-items-center gap-2 flex-wrap">
 
                 @if (Auth::user()->role == 'admin')
-<a href="{{ route('anggotas.create') }}" class="btn btn-success">
-    Tambah Anggota
-</a>
-@endif
+                    <a href="{{ route('anggotas.create') }}" class="btn btn-green">
+                        + Tambah Anggota
+                    </a>
+                @endif
 
-                <button onclick="window.print()" class="btn btn-outline-secondary px-4 rounded-3">
-                    <i class="bi bi-printer me-1"></i> Print
+                <button onclick="window.print()" class="btn btn-outline-success">
+                    <i class="bi bi-printer"></i> Print
                 </button>
 
                 <div id="customSearchBox"></div>
 
             </div>
-
         </div>
 
-        {{-- ALERT --}}
-        @if (session('success'))
-            <div class="alert alert-success border-0 shadow-sm rounded-4">
-                <i class="bi bi-check-circle me-2"></i>
-                {{ session('success') }}
-            </div>
-        @endif
-
         {{-- TABLE --}}
-        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="card-premium">
 
-            <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
-
-                <h6 class="mb-0 fw-bold text-dark">
-                    <i class="bi bi-table me-2 text-primary"></i>
-                    Data Anggota
-                </h6>
-
-                <small class="text-muted">Realtime data anggota</small>
-
-            </div>
-
-            {{-- ❌ FIX: HAPUS SCROLL RESPONSIVE --}}
-            <div>
+            <div class="table-responsive">
 
                 <table class="table table-hover align-middle mb-0" id="anggotaTable">
 
-                    <thead class="table-light">
-                        <tr class="text-uppercase small text-muted">
-
-                            <th class="ps-3">No</th>
+                    <thead>
+                        <tr>
+                            <th>No</th>
                             <th>Kode</th>
                             <th>Nama</th>
-                            <th>Kelahiran</th>
+                            <th>Lahir</th>
                             <th>Alamat</th>
                             <th>Wilayah</th>
-                            <th class="text-center">Status</th>
+                            <th>Status</th>
                             <th>Kontak</th>
-
                             @if (Auth::user()->role == 'admin')
-                                <th class="text-center">Aksi</th>
+                                <th class="no-print">Aksi</th>
                             @endif
-
                         </tr>
                     </thead>
 
                     <tbody>
-
-                        @forelse($anggotas as $index => $anggota)
+                        @foreach ($anggotas as $index => $anggota)
                             <tr>
-
-                                <td class="ps-3 text-muted">{{ $index + 1 }}</td>
-
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ $anggota->kode_wilayah }}</td>
+                                <td class="fw-bold">{{ $anggota->nama_anggota }}</td>
                                 <td>
-                                    <span class="badge bg-light text-dark border rounded-pill px-3 py-2">
-                                        {{ $anggota->kode_wilayah }}
-                                    </span>
+                                    {{ \Carbon\Carbon::parse($anggota->tanggal_lahir)->format('d/m/Y') }}<br>
+                                    <small class="text-muted">{{ $anggota->tempat_lahir }}</small>
                                 </td>
-
+                                <td>{{ $anggota->alamat }}</td>
+                                <td>{{ $anggota->kecamatan }}<br>{{ $anggota->kabupaten_kota }}</td>
                                 <td>
-                                    <div class="fw-semibold text-dark">{{ $anggota->nama_anggota }}</div>
-                                    <div class="text-muted small">{{ $anggota->ranting }}</div>
+                                    <span class="badge bg-success">{{ $anggota->status }}</span>
                                 </td>
-
-                                <td class="small text-muted">
-                                    {{ \Carbon\Carbon::parse($anggota->tanggal_lahir)->format('d M Y') }}<br>
-                                    {{ $anggota->tempat_lahir }}
-                                </td>
-
-                                <td class="small text-muted">
-                                    {{ \Illuminate\Support\Str::limit($anggota->alamat, 35) }}
-                                </td>
-
-                                <td class="small">
-                                    <div class="text-dark">{{ $anggota->kecamatan }}</div>
-                                    <div class="text-muted">{{ $anggota->kabupaten_kota }}</div>
-                                </td>
-
-                                {{-- STATUS --}}
-                                <td class="text-center">
-
-                                    @php
-                                        $statusStyle = match ($anggota->status) {
-                                            'GURU RANTING' => [
-                                                'bg' => '#ede9fe',
-                                                'text' => '#7c3aed',
-                                                'icon' => 'bi-award-fill',
-                                            ],
-
-                                            'ANGGOTA AKTIF' => [
-                                                'bg' => '#dcfce7',
-                                                'text' => '#16a34a',
-                                                'icon' => 'bi-check-circle-fill',
-                                            ],
-
-                                            'NON AKTIF' => [
-                                                'bg' => '#fee2e2',
-                                                'text' => '#ef4444',
-                                                'icon' => 'bi-slash-circle-fill',
-                                            ],
-
-                                            default => [
-                                                'bg' => '#e0f2fe',
-                                                'text' => '#0284c7',
-                                                'icon' => 'bi-person-fill',
-                                            ],
-                                        };
-                                    @endphp
-
-                                    <span class="d-inline-flex align-items-center gap-1 px-3 py-2 rounded-pill shadow-sm"
-                                        style="
-                                        background: {{ $statusStyle['bg'] }};
-                                        color: {{ $statusStyle['text'] }};
-                                        font-size: 11px;
-                                        font-weight: 700;
-                                        border: 1px solid {{ $statusStyle['text'] }}20;
-                                        white-space: nowrap;
-                                    ">
-
-                                        <i class="bi {{ $statusStyle['icon'] }}" style="font-size: 12px;"></i>
-
-                                        {{ $anggota->status }}
-
-                                    </span>
-
-                                </td>
-
-                                <td class="small text-dark">
-                                    {{ $anggota->no_telpon }}
-                                </td>
+                                <td>{{ $anggota->no_telpon }}</td>
 
                                 @if (Auth::user()->role == 'admin')
-<td>
-    <a href="{{ route('anggotas.edit', $anggota) }}">Edit</a>
+                                    <td class="no-print">
+                                        <a href="{{ route('anggotas.edit', $anggota) }}"
+                                            class="btn btn-sm btn-warning">Edit</a>
 
-    <form action="{{ route('anggotas.destroy', $anggota) }}" method="POST">
-        @csrf
-        @method('DELETE')
-        <button>Hapus</button>
-    </form>
-</td>
-@endif
-
+                                        <form action="{{ route('anggotas.destroy', $anggota) }}" method="POST"
+                                            class="d-inline">
+                                            @csrf @method('DELETE')
+                                            <button class="btn btn-sm btn-danger">Hapus</button>
+                                        </form>
+                                    </td>
+                                @endif
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="9" class="text-center py-5 text-muted">
-                                    Tidak ada data anggota
-                                </td>
-                            </tr>
-                        @endforelse
-
+                        @endforeach
                     </tbody>
 
                 </table>
 
             </div>
+
         </div>
 
     </div>
 @endsection
-
-
-@push('styles')
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap"
-        rel="stylesheet">
-
-    <style>
-        .table-hover tbody tr:hover {
-            background: #f8fafc;
-            transition: 0.2s;
-        }
-
-        .card {
-            border-radius: 20px;
-        }
-
-        .badge {
-            font-size: 11px;
-        }
-
-        /* search */
-        #customSearchBox input {
-            border-radius: 12px;
-            padding: 8px 14px;
-            border: 1px solid #e5e7eb;
-            outline: none;
-            min-width: 220px;
-        }
-
-        #customSearchBox input:focus {
-            border-color: #0f172a;
-            box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.1);
-        }
-    </style>
-@endpush
 
 
 @push('scripts')
@@ -272,7 +271,6 @@
                 paging: false,
                 info: false,
                 ordering: false,
-                scrollX: false, // ❌ FIX: hilangkan scroll + panah bawah
                 language: {
                     search: "",
                     searchPlaceholder: "Cari anggota..."
